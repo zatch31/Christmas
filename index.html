@@ -262,13 +262,21 @@
   </div>
 
   <script>
-    // Disable zoom (Ctrl+Scroll & Pinch)
-    document.addEventListener('wheel', function(e){
-      if(e.ctrlKey) e.preventDefault();
-    }, { passive: false });
+    // Disable zoom: pinch, double-tap, Ctrl/Cmd + scroll or +/- keys
+    document.addEventListener('gesturestart', e=>e.preventDefault());
+    document.addEventListener('gesturechange', e=>e.preventDefault());
+    document.addEventListener('gestureend', e=>e.preventDefault());
 
-    document.addEventListener('gesturestart', function(e){
-      e.preventDefault();
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', e=>{
+      const now = (new Date()).getTime();
+      if(now - lastTouchEnd <= 300) e.preventDefault(); // double-tap
+      lastTouchEnd = now;
+    }, false);
+
+    document.addEventListener('wheel', e=>{if(e.ctrlKey)e.preventDefault();}, {passive:false});
+    document.addEventListener('keydown', e=>{
+      if((e.ctrlKey||e.metaKey)&&(e.key==='+'||e.key==='-'||e.key==='='||e.key==='_' )) e.preventDefault();
     });
 
     const gifts = document.querySelectorAll('.gift');
@@ -296,7 +304,7 @@
 
     // Stars
     for(let i=0;i<80;i++){
-      const star = document.createElement('div');
+      const star=document.createElement('div');
       star.className='stars';
       star.style.left=Math.random()*100+'vw';
       star.style.top=Math.random()*100+'vh';
@@ -307,7 +315,7 @@
 
     // Snow
     for(let i=0;i<40;i++){
-      const snow = document.createElement('div');
+      const snow=document.createElement('div');
       snow.className='snow';
       snow.style.left=Math.random()*100+'vw';
       snow.style.animationDuration=5+Math.random()*10+'s';
