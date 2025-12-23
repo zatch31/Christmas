@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎄 Christmas Gift Notes (3D)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at top, #1e3c72, #0a1a2f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: white;
+    }
+
+    .scene { perspective: 1200px; display: flex; justify-content: center; align-items: center; width: 100%; }
+
+    .gifts {
+      display: grid;
+      grid-template-columns: repeat(2, 140px);
+      gap: 50px;
+      justify-content: center;
+      padding: 40px 0;
+      transform-style: preserve-3d;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: rotateX(10deg) rotateY(-10deg); }
+      50% { transform: rotateX(-5deg) rotateY(10deg); }
+    }
+
+    .gift {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      transition: transform 0.8s;
+    }
+    .gift:hover { transform: translateY(-15px) scale(1.05); }
+
+    .box {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #c62828, #ff5252);
+      transform: translateZ(20px);
+      border-radius: 12px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+
+    .ribbon-v { width: 12px; height: 100%; background: gold; position: absolute; left: 50%; transform: translateX(-50%) translateZ(21px); }
+    .ribbon-h { height: 12px; width: 100%; background: gold; position: absolute; top: 50%; transform: translateY(-50%) translateZ(21px); }
+
+    .lid {
+      position: absolute;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(135deg, #b71c1c, #ff1744);
+      top: -40px;
+      transform-origin: bottom;
+      transform: rotateX(0deg) translateZ(20px);
+      transition: transform 0.8s;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .open-text {
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+      letter-spacing: 1px;
+      text-shadow: 0 0 6px rgba(255,255,255,0.8);
+      background: rgba(0,0,0,0.25);
+      padding: 4px 8px;
+      border-radius: 12px;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+
+    .gift.open .lid { transform: rotateX(-120deg) translateZ(20px); }
+
+    .note {
+      position: absolute;
+      width: 120px;
+      max-width: 120px;
+      min-height: 80px;
+      background: #fff8e1;
+      color: #333;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      top: 30px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateZ(0) scale(0.5);
+      transition: all 0.8s;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      word-break: break-word;
+      white-space: pre-wrap; /* preserve spaces and wrap text */
+      line-height: 1.3;
+      font-size: 12px;
+    }
+
+    .gift.open .note { opacity: 1; transform: translateZ(80px) scale(1); }
+
+    h1 {
+      position: absolute;
+      top: 20px;
+      font-size: 2rem;
+      text-align: center;
+      text-shadow: 0 0 15px rgba(255,255,255,0.6);
+    }
+
+    .santa {
+      position: absolute;
+      top: 90px;
+      right: -400px;
+      font-size: 56px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: flySanta 22s linear infinite;
+      z-index: 3;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
+    }
+    .sleigh-stack { display: flex; flex-direction: column; align-items: center; }
+    .santa-body { transform: translateY(0); }
+    .sleigh { transform: translateY(0); }
+
+    @keyframes flySanta {
+      0% { transform: translateX(0) translateY(0); }
+      50% { transform: translateX(-100vw) translateY(-50px); }
+      100% { transform: translateX(-130vw) translateY(0); }
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .footer-content {
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      padding: 12px 24px;
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: footerGlow 3s ease-in-out infinite;
+      overflow: hidden;
+    }
+    .footer-text { font-weight: 600; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+    .footer-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    @keyframes footerGlow { 0%,100%{transform:scale(1);opacity:0.9;} 50%{transform:scale(1.05);opacity:1;} }
+
+    .footer-santa {
+      position: absolute;
+      bottom: 10px;
+      left: -200px;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: flyFooterSanta 18s linear infinite;
+      z-index: 1;
+      transform: scaleX(-1);
+    }
+    .footer-sleigh-stack { display: flex; flex-direction: column; align-items: center; }
+    .footer-santa-body { transform: translateY(0); }
+    .footer-sleigh { transform: translateY(0); }
+
+    @keyframes flyFooterSanta {
+      0% { transform: translateX(-200px) translateY(0) scaleX(-1); }
+      50% { transform: translateX(100vw) translateY(-20px) scaleX(-1); }
+      100% { transform: translateX(120vw) translateY(0) scaleX(-1); }
+    }
+
+    .snow, .stars { position: absolute; border-radius: 50%; }
+    .snow { width: 6px; height: 6px; background: white; opacity: 0.8; animation: snow 10s linear infinite; }
+    @keyframes snow { 0% { transform: translateY(-100vh); } 100% { transform: translateY(100vh); } }
+    .stars { width: 2px; height: 2px; background: white; opacity: 0.8; animation: twinkle 2s infinite alternate; }
+    @keyframes twinkle { 0% { opacity:0.2; } 50% { opacity:1; } 100% { opacity:0.2; } }
+
+    @media (max-width: 768px) {
+      .gifts { grid-template-columns: repeat(2, 100px); gap: 35px; justify-content: center; }
+      .gift { width: 100px; height: 100px; }
+      .note { width: 90px; max-width:90px; font-size:11px; }
+      h1 { font-size: 1.5rem; }
+      .santa { font-size: 42px; top: 60px; }
+      .footer-santa { font-size: 32px; }
+    }
+    @media (max-width: 480px) {
+      .gifts { grid-template-columns: 1fr; gap: 25px; justify-content: center; }
+      .gift { width: 90px; height: 90px; }
+      .note { width: 80px; max-width:80px; font-size:10px; }
+      h1 { font-size: 1.2rem; }
+      .santa { font-size: 36px; top: 50px; }
+      .footer-santa { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="santa">
+    <span class="reindeer">🦌🦌🦌</span>
+    <div class="sleigh-stack">
+      <span class="santa-body">🎅</span>
+      <span class="sleigh">🛷</span>
+    </div>
+    <span class="santa-gifts">🎁</span>
+  </div>
+
+  <h1>🎁 Click the Gifts 🎄</h1>
+
+  <div class="scene">
+    <div class="gifts">
+      <div class="gift" data-note="Wishing you and your family a joyful and cozy Christmas 🎄✨">
+        <div class="lid"><span class="open-text">OPEN ME 🎁</span></div>
+        <div class="box"></div>
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="note"></div>
+      </div>
+
+      <div class="gift" data-note="May your days be filled with warmth, smiles, and love for your loved ones ❤️">
+        <div class="lid"><span class="open-text">OPEN ME 🎁</span></div>
+        <div class="box"></div>
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="note"></div>
+      </div>
+
+      <div class="gift" data-note="Enjoy gentle joy and special moments with your family 😊">
+        <div class="lid"><span class="open-text">OPEN ME 🎁</span></div>
+        <div class="box"></div>
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="note"></div>
+      </div>
+
+      <div class="gift" data-note="A little note just for you – may this holiday make you feel truly special 💖🎁">
+        <div class="lid"><span class="open-text">OPEN ME 🎁</span></div>
+        <div class="box"></div>
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="note"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gifts = document.querySelectorAll('.gift');
+
+    function typeText(element, text, speed = 40) {
+      element.innerText = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.innerText += text[i];
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    gifts.forEach(gift => {
+      gift.addEventListener('click', () => {
+        gift.classList.toggle('open');
+        const note = gift.querySelector('.note');
+        typeText(note, gift.dataset.note, 40);
+      });
+    });
+
+    // Stars
+    for(let i=0;i<80;i++){
+      const star = document.createElement('div');
+      star.className='stars';
+      star.style.left=Math.random()*100+'vw';
+      star.style.top=Math.random()*100+'vh';
+      star.style.animationDuration=0.5 + Math.random()*1.5+'s';
+      star.style.opacity=Math.random();
+      document.body.appendChild(star);
+    }
+
+    // Snow
+    for(let i=0;i<40;i++){
+      const snow = document.createElement('div');
+      snow.className='snow';
+      snow.style.left=Math.random()*100+'vw';
+      snow.style.animationDuration=5+Math.random()*10+'s';
+      snow.style.opacity=Math.random();
+      document.body.appendChild(snow);
+    }
+  </script>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span class="footer-text">✨ Made with ❤️ for Christmas ✨</span>
+      <span class="footer-sub">Click the gifts • Enjoy the magic • Spread joy 🎄</span>
+    </div>
+
+    <div class="footer-santa">
+      <span class="reindeer">🦌🦌</span>
+      <div class="footer-sleigh-stack">
+        <span class="footer-santa-body">🎅</span>
+        <span class="footer-sleigh">🛷</span>
+      </div>
+      <span class="santa-gifts">🎁</span>
+    </div>
+  </footer>
+
+</body>
+</html>
