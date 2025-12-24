@@ -251,7 +251,7 @@
         <div class="note"></div>
       </div>
 
-      <div class="gift" data-note="A little note just for you – may this holiday make you feel truly special 💖🎁">
+      <div class="gift" data-note="A little note just for you – may this holiday make you feel truly special 💖🎁 And I truly cherish every little conversation with you 🌸">
         <div class="lid"><span class="open-text">OPEN ME 🎁</span></div>
         <div class="box"></div>
         <div class="ribbon-v"></div>
@@ -314,6 +314,7 @@
     }
 
     // Snow
+    const snowflakes = [];
     for(let i=0;i<40;i++){
       const snow=document.createElement('div');
       snow.className='snow';
@@ -321,6 +322,56 @@
       snow.style.animationDuration=5+Math.random()*10+'s';
       snow.style.opacity=Math.random();
       document.body.appendChild(snow);
+      snowflakes.push(snow);
+    }
+
+    // === Shake to make snow heavier ===
+    if(window.DeviceMotionEvent){
+      let lastX = null, lastY = null, lastZ = null;
+      let lastTime = 0;
+      const shakeThreshold = 15;
+
+      window.addEventListener('devicemotion', function(e){
+        const acc = e.accelerationIncludingGravity;
+        const curTime = Date.now();
+        if((curTime - lastTime) > 100){
+          lastTime = curTime;
+          if(lastX !== null){
+            let deltaX = Math.abs(acc.x - lastX);
+            let deltaY = Math.abs(acc.y - lastY);
+            let deltaZ = Math.abs(acc.z - lastZ);
+            const total = deltaX + deltaY + deltaZ;
+            if(total > shakeThreshold){
+              // Snow moves faster and sideways
+              snowflakes.forEach(s=>{
+                const curX = parseFloat(s.style.left);
+                const newX = Math.min(Math.max(curX + (Math.random()*30-15),0),100);
+                s.style.left = newX + 'vw';
+                let duration = parseFloat(s.style.animationDuration);
+                s.style.animationDuration = Math.max(duration/2,1) + 's';
+                s.style.width = '10px';
+                s.style.height = '10px';
+                s.style.opacity = 1;
+              });
+
+              // Spawn extra temporary snowflakes
+              for(let i=0;i<15;i++){
+                const extraSnow = document.createElement('div');
+                extraSnow.className='snow';
+                extraSnow.style.left = Math.random()*100+'vw';
+                extraSnow.style.top = '-10px';
+                extraSnow.style.width = '6px';
+                extraSnow.style.height = '6px';
+                extraSnow.style.opacity = 0.9;
+                extraSnow.style.animationDuration = (3+Math.random()*5)+'s';
+                document.body.appendChild(extraSnow);
+                setTimeout(()=>extraSnow.remove(), parseFloat(extraSnow.style.animationDuration)*1000);
+              }
+            }
+          }
+          lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+        }
+      });
     }
   </script>
 
