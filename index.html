@@ -213,6 +213,10 @@
   </style>
 </head>
 <body>
+  <audio id="bgMusic" loop preload="auto">
+  <source src="jingle-bells-instrumental-soft.mp3" type="audio/mpeg">
+</audio>
+
 
   <div class="santa">
     <span class="reindeer">🦌🦌🦌</span>
@@ -262,6 +266,14 @@
   </div>
 
   <script>
+    // 🎵 Start background music on first user interaction
+const bgMusic = document.getElementById('bgMusic');
+bgMusic.volume = 0.25; // soft volume
+
+document.addEventListener('click', () => {
+  bgMusic.play().catch(() => {});
+}, { once: true });
+
     // Disable zoom: pinch, double-tap, Ctrl/Cmd + scroll or +/- keys
     document.addEventListener('gesturestart', e=>e.preventDefault());
     document.addEventListener('gesturechange', e=>e.preventDefault());
